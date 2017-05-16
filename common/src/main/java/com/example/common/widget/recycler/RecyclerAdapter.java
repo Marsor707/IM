@@ -84,7 +84,7 @@ public abstract class RecyclerAdapter<Data> extends RecyclerView.Adapter<Recycle
         //绑定callback
         holder.callback=this;
 
-        return null;
+        return holder;
     }
 
     /**

@@ -1,14 +1,8 @@
 package com.example.marsor.push;
 
-import android.widget.TextView;
-
 import com.example.common.app.Activity;
 
-import butterknife.BindView;
-
-public class MainActivity extends Activity {
-    @BindView(R.id.txt_test)
-    TextView mTextTest;
+public class MainActivity extends Activity{
 
     @Override
     protected int getContentLayoutId() {
@@ -16,8 +10,8 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void initWidget() {
-        super.initWidget();
-        mTextTest.setText("Hello there");
+    protected void initData() {
+        super.initData();
     }
+
 }
