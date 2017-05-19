@@ -133,7 +133,7 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
             }
         }
         //开始动画
-        //旋转，y轴唯一，弹性差值器，时间
+        //旋转，y轴位移，弹性差值器，时间
         mAction.animate()
         .rotation(rotation)
         .translationY(transY)

@@ -171,6 +171,19 @@ public abstract class RecyclerAdapter<Data> extends RecyclerView.Adapter<Recycle
     }
 
     @Override
+    public void update(Data data, ViewHolder<Data> holder) {
+        //得到当前viewHolder坐标
+        int pos=holder.getAdapterPosition();
+        if(pos>=0){
+            //进行数据移除和更新
+            mDataList.remove(pos);
+            mDataList.add(pos,data);
+            // 通知这个坐标下的数据有更新
+            notifyItemChanged(pos);
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         ViewHolder viewHolder= (ViewHolder) v.getTag(R.id.tag_recycler_holder);
         if(this.mListener!=null){
@@ -250,6 +263,23 @@ public abstract class RecyclerAdapter<Data> extends RecyclerView.Adapter<Recycle
             if(this.callback!=null){
                 this.callback.update(data,this);
             }
+        }
+    }
+
+    /**
+     * 对回调接口做一次实现AdapterListener
+     * @param <Data>
+     */
+    public static abstract class AdapterListenerImpl<Data> implements AdapterListener<Data>{
+
+        @Override
+        public void onItemClick(ViewHolder holder, Data data) {
+
+        }
+
+        @Override
+        public void onItemLongClick(ViewHolder holder, Data data) {
+
         }
     }
 }
