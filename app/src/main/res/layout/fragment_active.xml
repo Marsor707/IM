@@ -5,7 +5,7 @@
     tools:context="com.example.marsor.push.frags.main.ActiveFragment">
 
     <com.example.common.widget.GalleryView
-        android:id="@+id/galleyView"
+        android:id="@+id/galleryView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="1dp"/>

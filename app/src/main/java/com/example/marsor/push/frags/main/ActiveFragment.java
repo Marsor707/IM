@@ -8,7 +8,7 @@ import com.example.marsor.push.R;
 import butterknife.BindView;
 
 public class ActiveFragment extends Fragment {
-    @BindView(R.id.galleyView)
+    @BindView(R.id.galleryView)
     GalleryView mGalley;
 
     public ActiveFragment() {

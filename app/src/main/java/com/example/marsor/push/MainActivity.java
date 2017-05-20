@@ -15,6 +15,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.example.common.app.Activity;
 import com.example.common.widget.PortraitView;
+import com.example.marsor.push.activities.AccountActivity;
 import com.example.marsor.push.frags.main.ActiveFragment;
 import com.example.marsor.push.frags.main.ContactFragment;
 import com.example.marsor.push.frags.main.GroupFragment;
@@ -90,7 +91,7 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
 
     @OnClick(R.id.btn_action)
     void onActionClick(){
-
+        AccountActivity.show(this);
     }
 
     boolean isFirst=true;
