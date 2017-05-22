@@ -1,5 +1,7 @@
-package com.example.marsor.push;
+package com.example.marsor.push.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.view.Menu;
@@ -15,6 +17,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.example.common.app.Activity;
 import com.example.common.widget.PortraitView;
+import com.example.marsor.push.R;
 import com.example.marsor.push.activities.AccountActivity;
 import com.example.marsor.push.frags.assist.PermissionsFragment;
 import com.example.marsor.push.frags.main.ActiveFragment;
@@ -52,6 +55,14 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
 
     private NavHelper<Integer> mNavHelper;
 
+    /**
+     * MainActivity显示的入口
+     * @param context 上下文
+     */
+    public static void show(Context context){
+        context.startActivity(new Intent(context,MainActivity.class));
+    }
+
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_main;
@@ -75,7 +86,6 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
                         this.view.setBackground(resource.getCurrent());
                     }
                 });
-        PermissionsFragment.haveAll(this,getSupportFragmentManager());
     }
 
     @Override

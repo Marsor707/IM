@@ -4,11 +4,14 @@ package com.example.marsor.push.frags.account;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.example.common.app.Application;
 import com.example.common.app.Fragment;
 import com.example.common.widget.PortraitView;
+import com.example.factory.Factory;
+import com.example.factory.net.UploadHelper;
 import com.example.marsor.push.R;
 import com.example.marsor.push.frags.media.GalleryFragment;
 import com.yalantis.ucrop.UCrop;
@@ -86,7 +89,16 @@ public class UpdateInfoFragment extends Fragment {
                 .asBitmap()
                 .centerCrop()
                 .into(mPortrait);
-
+        //拿到本地文件的地址
+        final String localPath=uri.getPath();
+        Log.e("TAG", "localPath:"+localPath);
+        Factory.runOnAnsy(new Runnable() {
+            @Override
+            public void run() {
+                String url=UploadHelper.uploadPortrait(localPath);
+                Log.e("TAG", "url:"+url);
+            }
+        });
     }
 
 
