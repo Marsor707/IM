@@ -1,4 +1,4 @@
-package com.example.marsor.push.frags.account;
+package com.example.marsor.push.frags.user;
 
 
 import android.content.Intent;
