@@ -10,6 +10,14 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "tLVmxEw95s5EE810IeNg85",
+                GETUI_APP_KEY   : "7lbnZxhJMM9djClXKpPyI4",
+                GETUI_APP_SECRET: "sjdynCkxOJ9nNFPiKL4Z99",
+                PACKAGE_NAME    : applicationId
+        ]
+
     }
     buildTypes {
         release {
@@ -36,6 +44,8 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
     compile "com.yalantis:ucrop:$rootProject.ext.ucropVersion"
     compile "pub.devrel:easypermissions:$rootProject.ext.easyPMVersion"
+    // 个推
+    compile "com.getui:sdk:$rootProject.ext.getuiVersion"
 
 
     compile project(':factory')

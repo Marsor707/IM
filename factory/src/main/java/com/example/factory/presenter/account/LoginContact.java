@@ -7,13 +7,13 @@ import com.example.factory.presenter.BaseContract;
  */
 
 public interface LoginContact {
-    interface View extends BaseContract.View<Presenter>{
+    interface View extends BaseContract.View<Presenter> {
         //登陆成功
         void loginSuccess();
     }
 
-    interface Presenter extends BaseContract.Presenter{
+    interface Presenter extends BaseContract.Presenter {
         //发起一个登陆
-        void login(String phone, String name, String password);
+        void login(String phone, String password);
     }
 }

@@ -6,9 +6,15 @@ import com.example.factory.data.DataSource;
 import com.example.factory.model.api.RspModel;
 import com.example.factory.model.api.account.AccountRspModel;
 import com.example.factory.model.api.account.RegisterModel;
+import com.example.factory.model.db.AppDatabase;
 import com.example.factory.model.db.User;
 import com.example.factory.net.NetWork;
 import com.example.factory.net.RemoteService;
+import com.example.factory.persistence.Account;
+import com.raizlabs.android.dbflow.config.DatabaseDefinition;
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,10 +46,31 @@ public class AccountHelper {
                 if (rspModel.success()) {
                     //拿到实体
                     AccountRspModel accountRspModel = rspModel.getResult();
+                    //获取我的信息
+                    User user = accountRspModel.getUser();
+                    //第一种 直接保存
+                    user.save();
+
+                        /*
+                        //第二种 通过ModelAdapter保存
+                        FlowManager.getModelAdapter(User.class)
+                                .save(user);
+
+                        //第三种 事物中
+                        DatabaseDefinition definition=FlowManager.getDatabase(AppDatabase.class);
+                        definition.beginTransactionAsync(new ITransaction() {
+                            @Override
+                            public void execute(DatabaseWrapper databaseWrapper) {
+                                FlowManager.getModelAdapter(User.class)
+                                        .save(user);
+                            }
+                        }).build().execute();
+                        */
+                    //同步到xml持久化中
+                    Account.login(accountRspModel);
+
                     //判断设备绑定状态
                     if (accountRspModel.isBind()) {
-                        User user = accountRspModel.getUser();
-                        //TODO 进行的是数据库的写入和缓存
                         //然后返回
                         callback.onDataLoaded(user);
                     } else {
@@ -71,6 +98,6 @@ public class AccountHelper {
      */
     public static void bindPush(final DataSource.Callback<User> callback) {
         //TODO 先抛出一个错误 其实是绑定没有进行
-        callback.onDataNotAvailable(R.string.app_name);
+        Account.setBind(true);
     }
 }
