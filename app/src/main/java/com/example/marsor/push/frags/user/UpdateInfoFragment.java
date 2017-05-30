@@ -3,18 +3,25 @@ package com.example.marsor.push.frags.user;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.util.Log;
+import android.support.annotation.StringRes;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.common.app.Application;
-import com.example.common.app.Fragment;
+import com.example.common.app.PresenterFragment;
 import com.example.common.widget.PortraitView;
-import com.example.factory.Factory;
-import com.example.factory.net.UploadHelper;
+import com.example.factory.presenter.user.UpdateInfoContract;
+import com.example.factory.presenter.user.UpdateInfoPresenter;
 import com.example.marsor.push.R;
+import com.example.marsor.push.activities.MainActivity;
 import com.example.marsor.push.frags.media.GalleryFragment;
 import com.yalantis.ucrop.UCrop;
+
+import net.qiujuer.genius.ui.widget.Loading;
 
 import java.io.File;
 
@@ -26,9 +33,25 @@ import static android.app.Activity.RESULT_OK;
 /**
  * 更新信息的Fragment
  */
-public class UpdateInfoFragment extends Fragment {
+public class UpdateInfoFragment extends PresenterFragment<UpdateInfoContract.Presenter> implements UpdateInfoContract.View {
+    @BindView(R.id.im_sex)
+    ImageView mSex;
+
+    @BindView(R.id.edit_desc)
+    EditText mDesc;
+
     @BindView(R.id.im_portrait)
     PortraitView mPortrait;
+
+    @BindView(R.id.loading)
+    Loading mLoading;
+
+    @BindView(R.id.btn_submit)
+    Button mSubmit;
+
+    //头像的本地路径
+    private String mPortraitPath;
+    private boolean isMan = true;
 
     public UpdateInfoFragment() {
         // Required empty public constructor
@@ -40,27 +63,27 @@ public class UpdateInfoFragment extends Fragment {
     }
 
     @OnClick(R.id.im_portrait)
-    void onPortraitClick(){
+    void onPortraitClick() {
         new GalleryFragment()
                 .setListener(new GalleryFragment.OnSelectedListener() {
                     @Override
                     public void OnSelectedImage(String path) {
-                        UCrop.Options options=new UCrop.Options();
+                        UCrop.Options options = new UCrop.Options();
                         //设置图片处理的格式jpeg
                         options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
                         //设置压缩后的图片精读
                         options.setCompressionQuality(96);
                         //得到头像的缓存地址
-                        File dPath= Application.getPortraitTmpFile();
+                        File dPath = Application.getPortraitTmpFile();
                         //发起剪切
-                        UCrop.of(Uri.fromFile(new File(path)),Uri.fromFile(dPath))
-                                .withAspectRatio(1,1)//1:1比例
-                                .withMaxResultSize(520,520)//返回的最大尺寸
+                        UCrop.of(Uri.fromFile(new File(path)), Uri.fromFile(dPath))
+                                .withAspectRatio(1, 1)//1:1比例
+                                .withMaxResultSize(520, 520)//返回的最大尺寸
                                 .withOptions(options)//相关参数
                                 .start(getActivity());
                     }
                     //show的时候建议使用getChildFragmentManager
-                }).show(getChildFragmentManager(),GalleryFragment.class.getName());
+                }).show(getChildFragmentManager(), GalleryFragment.class.getName());
     }
 
     @Override
@@ -75,31 +98,81 @@ public class UpdateInfoFragment extends Fragment {
             }
 
         } else if (resultCode == UCrop.RESULT_ERROR) {
-            final Throwable cropError = UCrop.getError(data);
+            Application.showToast(R.string.data_rsp_error_unknown);
         }
     }
 
     /**
      * 加载uri到当前的头像中
+     *
      * @param uri Uri
      */
-    private void loadPortrait(Uri uri){
+    private void loadPortrait(Uri uri) {
+        //得到头像地址
+        mPortraitPath = uri.getPath();
         Glide.with(this)
                 .load(uri)
                 .asBitmap()
                 .centerCrop()
                 .into(mPortrait);
-        //拿到本地文件的地址
-        final String localPath=uri.getPath();
-        Log.e("TAG", "localPath:"+localPath);
-        Factory.runOnAnsy(new Runnable() {
-            @Override
-            public void run() {
-                String url=UploadHelper.uploadPortrait(localPath);
-                Log.e("TAG", "url:"+url);
-            }
-        });
+    }
+
+    @OnClick(R.id.im_sex)
+    void onSexClick() {
+        //当性别图片点击的时候触发
+        isMan = !isMan;
+        Drawable drawable = getResources().getDrawable(isMan ? R.drawable.ic_sex_man : R.drawable.ic_sex_woman);
+        mSex.setImageDrawable(drawable);
+        //设置背景的层级 切换颜色
+        mSex.getBackground().setLevel(isMan ? 0 : 1);
+    }
+
+    @OnClick(R.id.btn_submit)
+    void onSubmitClick() {
+        String desc = mDesc.getText().toString();
+        //调用P层进行注册
+        mPresenter.update(mPortraitPath, desc, isMan);
+    }
+
+    @Override
+    public void showError(@StringRes int str) {
+        super.showError(str);
+        //当需要显示错误时触发，一定是结束了
+        //停止loading
+        mLoading.stop();
+        //让控件可以输入
+        mDesc.setEnabled(true);
+        mPortrait.setEnabled(true);
+        mSex.setEnabled(true);
+        //提交按钮可以继续点击
+        mSubmit.setEnabled(true);
+    }
+
+    @Override
+    public void showLoading() {
+        super.showLoading();
+        //正在进行时 正在注册 界面不可操作
+        //开始loading
+        mLoading.start();
+        //让控件不可以输入
+        mDesc.setEnabled(false);
+        mPortrait.setEnabled(false);
+        mSex.setEnabled(false);
+        //提交按钮不可以继续点击
+        mSubmit.setEnabled(false);
     }
 
 
+    @Override
+    public void updateSucceed() {
+        //更新成功跳转到主界面
+        MainActivity.show(getContext());
+        getActivity().finish();
+    }
+
+    @Override
+    protected UpdateInfoContract.Presenter initPresenter() {
+        //初始化Presenter
+        return new UpdateInfoPresenter(this);
+    }
 }

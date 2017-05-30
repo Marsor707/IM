@@ -1,52 +1,31 @@
-package com.example.factory.model.db;
+package com.example.factory.model.card;
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.example.factory.model.db.User;
 
 import java.util.Date;
 
 /**
- * Created by marsor on 2017/5/28.
+ * Created by marsor on 2017/5/30.
  */
 
-@Table(database = AppDatabase.class)
-public class User extends BaseModel {
-    public static final int SEX_MAN = 1;
-    public static final int SEX_WOMAN = 2;
-
-    @PrimaryKey
+public class UserCard {
     private String id;
-    @Column
     private String name;
-    @Column
     private String phone;
-    @Column
     private String portrait;
-    @Column
     private String desc;
-    @Column
     private int sex = 0;
 
-    // 我对某人的备注信息，也应该写入到数据库中
-    @Column
-    private String alias;
-
     // 用户关注人的数量
-    @Column
     private int follows;
 
     // 用户粉丝的数量
-    @Column
     private int following;
 
     // 我与当前User的关系状态，是否已经关注了这个人
-    @Column
     private boolean isFollow;
 
-    // 时间字段
-    @Column
+    // 用户信息最后的更新时间
     private Date modifyAt;
 
     public String getId() {
@@ -97,14 +76,6 @@ public class User extends BaseModel {
         this.sex = sex;
     }
 
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
-
     public int getFollows() {
         return follows;
     }
@@ -137,20 +108,24 @@ public class User extends BaseModel {
         this.modifyAt = modifyAt;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
-                ", portrait='" + portrait + '\'' +
-                ", desc='" + desc + '\'' +
-                ", sex=" + sex +
-                ", alias='" + alias + '\'' +
-                ", follows=" + follows +
-                ", following=" + following +
-                ", isFollow=" + isFollow +
-                ", modifyAt=" + modifyAt +
-                '}';
+    // 缓存一个对应的User, 不能被GSON框架解析使用ø
+    private transient User user;
+
+    public User build() {
+        if (user == null) {
+            User user = new User();
+            user.setId(id);
+            user.setName(name);
+            user.setPortrait(portrait);
+            user.setPhone(phone);
+            user.setDesc(desc);
+            user.setSex(sex);
+            user.setFollow(isFollow);
+            user.setFollows(follows);
+            user.setFollowing(following);
+            user.setModifyAt(modifyAt);
+            this.user = user;
+        }
+        return user;
     }
 }
