@@ -42,6 +42,9 @@ public class Account {
         sp.edit()
                 .putString(KEY_PUSH_ID, pushId)
                 .putBoolean(KEY_IS_BIND, isBind)
+                .putString(KEY_TOKEN, token)
+                .putString(KEY_USER_ID, userId)
+                .putString(KEY_ACCOUNT, account)
                 .apply();
     }
 
@@ -53,6 +56,9 @@ public class Account {
         SharedPreferences sp = context.getSharedPreferences(Account.class.getName(), Context.MODE_PRIVATE);
         pushId = sp.getString(KEY_PUSH_ID, "");
         isBind = sp.getBoolean(KEY_IS_BIND, false);
+        token = sp.getString(KEY_TOKEN, "");
+        userId = sp.getString(KEY_USER_ID, "");
+        account = sp.getString(KEY_ACCOUNT, "");
     }
 
     /**
@@ -135,5 +141,14 @@ public class Account {
                 .from(User.class)
                 .where(User_Table.id.eq(userId))
                 .querySingle();
+    }
+
+    /**
+     * 获取当前登录的token
+     *
+     * @return token
+     */
+    public static String getToken() {
+        return token;
     }
 }
