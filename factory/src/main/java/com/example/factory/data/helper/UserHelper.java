@@ -36,7 +36,7 @@ public class UserHelper {
                     UserCard userCard = rspModel.getResult();
                     //数据库的操作 需要把UserCard转换为User
                     //保存用户信息
-                    User user=userCard.build();
+                    User user = userCard.build();
                     user.save();
                     //返回成功
                     callback.onDataLoaded(userCard);
@@ -61,10 +61,10 @@ public class UserHelper {
             @Override
             public void onResponse(Call<RspModel<List<UserCard>>> call, Response<RspModel<List<UserCard>>> response) {
                 RspModel<List<UserCard>> rspModel = response.body();
-                if(rspModel.success()){
+                if (rspModel.success()) {
                     //返回数据
                     callback.onDataLoaded(rspModel.getResult());
-                }else {
+                } else {
                     Factory.decodeRspCode(rspModel, callback);
                 }
             }
@@ -76,5 +76,34 @@ public class UserHelper {
         });
         //把当前的调度者返回
         return call;
+    }
+
+    //关注的网络请求
+    public static void follow(String id, final DataSource.Callback<UserCard> callback) {
+        RemoteService service = NetWork.remote();
+        Call<RspModel<UserCard>> call = service.userFollow(id);
+        call.enqueue(new Callback<RspModel<UserCard>>() {
+            @Override
+            public void onResponse(Call<RspModel<UserCard>> call, Response<RspModel<UserCard>> response) {
+                RspModel<UserCard> rspModel = response.body();
+                if (rspModel.success()) {
+                    UserCard userCard=rspModel.getResult();
+                    //保存到本地数据库
+                    User user=userCard.build();
+                    user.save();
+                    //TODO 通知联系人列表刷新
+
+                    //返回数据
+                    callback.onDataLoaded(userCard);
+                } else {
+                    Factory.decodeRspCode(rspModel, callback);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RspModel<UserCard>> call, Throwable t) {
+                callback.onDataNotAvailable(R.string.data_network_error);
+            }
+        });
     }
 }

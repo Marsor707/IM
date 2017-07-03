@@ -51,6 +51,7 @@ public interface RemoteService {
 
     /**
      * 用户更新的接口
+     *
      * @param model UserUpdateModel
      * @return RspModel<UserCard>
      */
@@ -59,9 +60,19 @@ public interface RemoteService {
 
     /**
      * 用户搜索的接口
+     *
      * @param name 用户名
      * @return RspModel<List<UserCard>>
      */
     @GET("user/search/{name}")
     Call<RspModel<List<UserCard>>> userSearch(@Path("name") String name);
+
+    /**
+     * 用户关注的接口
+     *
+     * @param userId 被关注的id
+     * @return RspModel<UserCard>
+     */
+    @PUT("user/follow/{userId}")
+    Call<RspModel<UserCard>> userFollow(@Path("userId") String userId);
 }
