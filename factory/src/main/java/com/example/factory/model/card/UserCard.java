@@ -1,5 +1,6 @@
 package com.example.factory.model.card;
 
+import com.example.factory.model.Author;
 import com.example.factory.model.db.User;
 
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.Date;
  * Created by marsor on 2017/5/30.
  */
 
-public class UserCard {
+public class UserCard implements Author{
     private String id;
     private String name;
     private String phone;
