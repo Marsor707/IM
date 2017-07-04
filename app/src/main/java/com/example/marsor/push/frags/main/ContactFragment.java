@@ -18,9 +18,11 @@ import com.example.factory.presenter.contact.ContactContract;
 import com.example.factory.presenter.contact.ContactPresenter;
 import com.example.marsor.push.R;
 import com.example.marsor.push.activities.MessageActivity;
+import com.example.marsor.push.activities.PersonalActivity;
 import com.example.marsor.push.frags.search.SearchUserFragment;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class ContactFragment extends PresenterFragment<ContactContract.Presenter> implements ContactContract.View{
 
@@ -114,6 +116,12 @@ public class ContactFragment extends PresenterFragment<ContactContract.Presenter
             mPortraitView.setup(Glide.with(ContactFragment.this),user);
             mName.setText(user.getName());
             mDesc.setText(user.getDesc());
+        }
+
+        @OnClick(R.id.im_portrait)
+        void onPortraitClick() {
+            //显示信息
+            PersonalActivity.show(getContext(),mData.getId());
         }
     }
 }
