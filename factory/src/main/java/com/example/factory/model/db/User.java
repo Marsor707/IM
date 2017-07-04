@@ -1,19 +1,21 @@
 package com.example.factory.model.db;
 
 import com.example.factory.model.Author;
+import com.example.factory.utils.DiffUiDataCallback;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by marsor on 2017/5/28.
  */
 
 @Table(database = AppDatabase.class)
-public class User extends BaseModel implements Author{
+public class User extends BaseModel implements Author,DiffUiDataCallback.UiDataDiffer<User>{
     public static final int SEX_MAN = 1;
     public static final int SEX_WOMAN = 2;
 
@@ -139,19 +141,34 @@ public class User extends BaseModel implements Author{
     }
 
     @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
-                ", portrait='" + portrait + '\'' +
-                ", desc='" + desc + '\'' +
-                ", sex=" + sex +
-                ", alias='" + alias + '\'' +
-                ", follows=" + follows +
-                ", following=" + following +
-                ", isFollow=" + isFollow +
-                ", modifyAt=" + modifyAt +
-                '}';
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (portrait != null ? portrait.hashCode() : 0);
+        result = 31 * result + (desc != null ? desc.hashCode() : 0);
+        result = 31 * result + sex;
+        result = 31 * result + (alias != null ? alias.hashCode() : 0);
+        result = 31 * result + follows;
+        result = 31 * result + following;
+        result = 31 * result + (isFollow ? 1 : 0);
+        result = 31 * result + (modifyAt != null ? modifyAt.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean isSame(User old) {
+        return this == old || Objects.equals(id, old.id);
+    }
+
+    @Override
+    public boolean isUiContentSame(User old) {
+        //显示的内容是否一样
+        return this==old||(
+                Objects.equals(name,old.name)
+                &&Objects.equals(portrait,old.portrait)
+                &&Objects.equals(sex,old.sex)
+                &&Objects.equals(isFollow,old.isFollow)
+                );
     }
 }
