@@ -4,6 +4,7 @@ import android.support.annotation.StringRes;
 
 import com.example.common.app.Application;
 import com.example.factory.data.DataSource;
+import com.example.factory.data.user.UserCenter;
 import com.example.factory.model.api.RspModel;
 import com.example.factory.persistence.Account;
 import com.example.factory.utils.DBFlowExclusionStrategy;
@@ -167,5 +168,14 @@ public class Factory {
      */
     public static void dispathPush(String message) {
         //TODO
+    }
+
+    /**
+     * 获取一个用户中心的实现类
+     *
+     * @return 用户中心的规范接口
+     */
+    public static UserCenter getUserCenter() {
+        return null;
     }
 }

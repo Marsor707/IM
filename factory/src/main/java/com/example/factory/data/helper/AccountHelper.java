@@ -95,24 +95,25 @@ public class AccountHelper {
                 AccountRspModel accountRspModel = rspModel.getResult();
                 //获取我的信息
                 User user = accountRspModel.getUser();
-                //第一种 直接保存
-                user.save();
+                DbHelper.save(User.class,user);
 
-                        /*
-                        //第二种 通过ModelAdapter保存
+                //第一种 直接保存
+                //user.save();
+                /*
+                //第二种 通过ModelAdapter保存
+                FlowManager.getModelAdapter(User.class)
+                        .save(user);
+
+                //第三种 事物中
+                DatabaseDefinition definition=FlowManager.getDatabase(AppDatabase.class);
+                definition.beginTransactionAsync(new ITransaction() {
+                    @Override
+                    public void execute(DatabaseWrapper databaseWrapper) {
                         FlowManager.getModelAdapter(User.class)
                                 .save(user);
-
-                        //第三种 事物中
-                        DatabaseDefinition definition=FlowManager.getDatabase(AppDatabase.class);
-                        definition.beginTransactionAsync(new ITransaction() {
-                            @Override
-                            public void execute(DatabaseWrapper databaseWrapper) {
-                                FlowManager.getModelAdapter(User.class)
-                                        .save(user);
-                            }
-                        }).build().execute();
-                        */
+                    }
+                }).build().execute();
+                */
                 //同步到xml持久化中
                 Account.login(accountRspModel);
 
