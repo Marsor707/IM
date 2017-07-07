@@ -52,38 +52,33 @@ public class ContactPresenter extends BasePresenter<ContactContract.View> implem
                     }
                 }).execute();
 
-        UserHelper.refreshContacts(new DataSource.Callback<List<UserCard>>() {
-            @Override
-            public void onDataNotAvailable(@StringRes int strRes) {
-                //网络失败 因为本地有数据 所以不处理
-            }
+        //加载网络数据
+        UserHelper.refreshContacts();
 
+        /*
+        final List<User> users = new ArrayList<User>();
+        for (UserCard userCard : userCards) {
+            users.add(userCard.build());
+        }
+
+        //丢到事务中保存数据库
+        DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);
+        definition.beginTransactionAsync(new ITransaction() {
             @Override
-            public void onDataLoaded(final List<UserCard> userCards) {
-                final List<User> users = new ArrayList<User>();
+            public void execute(DatabaseWrapper databaseWrapper) {
                 for (UserCard userCard : userCards) {
-                    users.add(userCard.build());
+                    FlowManager.getModelAdapter(User.class)
+                            .saveAll(users);
                 }
-
-                //丢到事务中保存数据库
-                DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);
-                definition.beginTransactionAsync(new ITransaction() {
-                    @Override
-                    public void execute(DatabaseWrapper databaseWrapper) {
-                        for (UserCard userCard : userCards) {
-                            FlowManager.getModelAdapter(User.class)
-                                    .saveAll(users);
-                        }
-                    }
-                }).build().execute();
-
-                //网络数据往往是新的 需要刷新到界面
-                List<User> old = getView().getRecyclerAdapter().getItems();
-                //会导致数据顺序全部为新的数据集合
-                //getView().getRecyclerAdapter().replace(users);
-                diff(old, users);
             }
-        });
+        }).build().execute();
+
+        //网络数据往往是新的 需要刷新到界面
+        List<User> old = getView().getRecyclerAdapter().getItems();
+        //会导致数据顺序全部为新的数据集合
+        //getView().getRecyclerAdapter().replace(users);
+        diff(old, users);
+        */
     }
 
     private void diff(List<User> oldList, List<User> newList) {
