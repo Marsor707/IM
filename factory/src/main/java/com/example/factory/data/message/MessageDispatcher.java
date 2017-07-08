@@ -6,7 +6,6 @@ import com.example.factory.data.helper.DbHelper;
 import com.example.factory.data.helper.GroupHelper;
 import com.example.factory.data.helper.MessageHelper;
 import com.example.factory.data.helper.UserHelper;
-import com.example.factory.data.user.UserDispatcher;
 import com.example.factory.model.card.MessageCard;
 import com.example.factory.model.db.Group;
 import com.example.factory.model.db.Message;
@@ -29,7 +28,7 @@ public class MessageDispatcher implements MessageCenter {
 
     public static MessageCenter instance() {
         if (instance == null) {
-            synchronized (UserDispatcher.class) {
+            synchronized (MessageDispatcher.class) {
                 if (instance == null)
                     instance = new MessageDispatcher();
             }

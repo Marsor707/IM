@@ -22,7 +22,7 @@ public class UserDispatcher implements UserCenter {
 
     public static UserCenter instance() {
         if (instance == null) {
-            synchronized (UserCenter.class) {
+            synchronized (UserDispatcher.class) {
                 if (instance == null)
                     instance = new UserDispatcher();
             }
