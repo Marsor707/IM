@@ -4,14 +4,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.util.DiffUtil;
 
+import com.example.common.widget.recycler.RecyclerAdapter;
 import com.example.factory.data.DataSource;
 import com.example.factory.data.helper.UserHelper;
+import com.example.factory.data.user.ContactDataSource;
+import com.example.factory.data.user.ContactRepository;
 import com.example.factory.model.card.UserCard;
 import com.example.factory.model.db.AppDatabase;
 import com.example.factory.model.db.User;
 import com.example.factory.model.db.User_Table;
 import com.example.factory.persistence.Account;
 import com.example.factory.presenter.BasePresenter;
+import com.example.factory.presenter.BaseRecyclerPresenter;
 import com.example.factory.utils.DiffUiDataCallback;
 import com.raizlabs.android.dbflow.config.DatabaseDefinition;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -28,57 +32,23 @@ import java.util.List;
  * Created by marsor on 2017/7/3.
  */
 
-public class ContactPresenter extends BasePresenter<ContactContract.View> implements ContactContract.Presenter {
+public class ContactPresenter extends BaseRecyclerPresenter<User,ContactContract.View> implements ContactContract.Presenter,DataSource.SucceedCallback<List<User>> {
+    private ContactDataSource mSource;
+
     public ContactPresenter(ContactContract.View view) {
         super(view);
+        mSource=new ContactRepository();
     }
 
     @Override
     public void start() {
         super.start();
-        //加载本地数据库数据
-        SQLite.select()
-                .from(User.class)
-                .where(User_Table.isFollow.eq(true))
-                .and(User_Table.id.notEq(Account.getUserId()))
-                .orderBy(User_Table.name, true)
-                .limit(100)
-                .async()
-                .queryListResultCallback(new QueryTransaction.QueryResultListCallback<User>() {
-                    @Override
-                    public void onListQueryResult(QueryTransaction transaction, @NonNull List<User> tResult) {
-                        getView().getRecyclerAdapter().replace(tResult);
-                        getView().onAdapterDataChanged();
-                    }
-                }).execute();
+        mSource.load(this);
 
         //加载网络数据
         UserHelper.refreshContacts();
 
-        /*
-        final List<User> users = new ArrayList<User>();
-        for (UserCard userCard : userCards) {
-            users.add(userCard.build());
-        }
 
-        //丢到事务中保存数据库
-        DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);
-        definition.beginTransactionAsync(new ITransaction() {
-            @Override
-            public void execute(DatabaseWrapper databaseWrapper) {
-                for (UserCard userCard : userCards) {
-                    FlowManager.getModelAdapter(User.class)
-                            .saveAll(users);
-                }
-            }
-        }).build().execute();
-
-        //网络数据往往是新的 需要刷新到界面
-        List<User> old = getView().getRecyclerAdapter().getItems();
-        //会导致数据顺序全部为新的数据集合
-        //getView().getRecyclerAdapter().replace(users);
-        diff(old, users);
-        */
     }
 
     private void diff(List<User> oldList, List<User> newList) {
@@ -90,5 +60,31 @@ public class ContactPresenter extends BasePresenter<ContactContract.View> implem
         //尝试刷新界面
         result.dispatchUpdatesTo(getView().getRecyclerAdapter());
         getView().onAdapterDataChanged();
+    }
+
+    //运行到这里的时候是子线程
+    @Override
+    public void onDataLoaded(List<User> users) {
+        //无论怎么操作 数据变更都会通知到这里来
+        final ContactContract.View view=getView();
+        if(view==null)
+            return;
+        RecyclerAdapter<User> adapter=view.getRecyclerAdapter();
+        List<User> old=adapter.getItems();
+
+        //进行数据对比
+        DiffUtil.Callback callback = new DiffUiDataCallback<>(old, users);
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
+
+        //调用基类方法进行界面刷新
+        refreshData(result,users);
+
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        //当界面销毁时 把数据监听销毁
+        mSource.dispose();
     }
 }
