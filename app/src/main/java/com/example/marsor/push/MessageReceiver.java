@@ -69,6 +69,6 @@ public class MessageReceiver extends BroadcastReceiver {
      */
     private void onMessageArrived(String message) {
         //交给Factory处理
-        Factory.dispathPush(message);
+        Factory.dispatchPush(message);
     }
 }
