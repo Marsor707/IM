@@ -2,11 +2,19 @@ package com.example.marsor.push.frags.message;
 
 
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.ViewTarget;
 import com.example.common.widget.PortraitView;
+import com.example.factory.model.db.User;
+import com.example.factory.presenter.message.ChatContract;
+import com.example.factory.presenter.message.ChatUserPresenter;
 import com.example.marsor.push.R;
 import com.example.marsor.push.activities.PersonalActivity;
 
@@ -16,7 +24,7 @@ import butterknife.OnClick;
 /**
  * 用户聊天界面
  */
-public class ChatUserFragment extends ChatFragment {
+public class ChatUserFragment extends ChatFragment<User> implements ChatContract.UserView {
 
     @BindView(R.id.im_portrait)
     PortraitView mPortrait;
@@ -30,6 +38,20 @@ public class ChatUserFragment extends ChatFragment {
     @Override
     protected int getContentLayoutId() {
         return R.layout.fragment_chat_user;
+    }
+
+    @Override
+    protected void initWidget(View root) {
+        super.initWidget(root);
+        Glide.with(this)
+                .load(R.drawable.default_banner_chat)
+                .centerCrop()
+                .into(new ViewTarget<CollapsingToolbarLayout, GlideDrawable>(mCollapsingLayout) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                        this.view.setContentScrim(resource.getCurrent());
+                    }
+                });
     }
 
     @Override
@@ -100,5 +122,17 @@ public class ChatUserFragment extends ChatFragment {
     @OnClick(R.id.im_portrait)
     void onPortraitClick() {
         PersonalActivity.show(getContext(), mReceiverId);
+    }
+
+    @Override
+    protected ChatContract.Presenter initPresenter() {
+        return new ChatUserPresenter(this, mReceiverId);
+    }
+
+    @Override
+    public void onInit(User user) {
+        //对和你聊天的朋友的信息进行初始化操作
+        mPortrait.setup(Glide.with(this), user.getPortrait());
+        mCollapsingLayout.setTitle(user.getName());
     }
 }

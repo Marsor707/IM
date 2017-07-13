@@ -21,6 +21,7 @@ public abstract class PresenterFragment<Presenter extends BaseContract.Presenter
 
     /**
      * 初始化Presenter
+     *
      * @return Presenter
      */
     protected abstract Presenter initPresenter();
@@ -28,16 +29,16 @@ public abstract class PresenterFragment<Presenter extends BaseContract.Presenter
     @Override
     public void showError(@StringRes int str) {
         //显示错误 优先使用占位布局
-        if(mPlaceHolderView!=null) {
+        if (mPlaceHolderView != null) {
             mPlaceHolderView.triggerError(str);
-        }else {
+        } else {
             Application.showToast(str);
         }
     }
 
     @Override
     public void showLoading() {
-        if(mPlaceHolderView!=null){
+        if (mPlaceHolderView != null) {
             mPlaceHolderView.triggerLoading();
         }
     }
@@ -46,5 +47,12 @@ public abstract class PresenterFragment<Presenter extends BaseContract.Presenter
     public void setPresenter(Presenter presenter) {
         //View中赋值Presenter
         mPresenter = presenter;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mPresenter != null)
+            mPresenter.destroy();
     }
 }

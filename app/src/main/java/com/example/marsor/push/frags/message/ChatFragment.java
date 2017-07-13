@@ -3,6 +3,7 @@ package com.example.marsor.push.frags.message;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,13 +14,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.common.app.Fragment;
+import com.example.common.app.PresenterFragment;
 import com.example.common.widget.PortraitView;
 import com.example.common.widget.adapter.TextWatcherAdapter;
 import com.example.common.widget.recycler.RecyclerAdapter;
 import com.example.factory.model.db.Message;
 import com.example.factory.model.db.User;
 import com.example.factory.persistence.Account;
+import com.example.factory.presenter.message.ChatContract;
 import com.example.marsor.push.R;
 import com.example.marsor.push.activities.MessageActivity;
 
@@ -35,7 +37,9 @@ import butterknife.OnClick;
  * Created by marsor on 2017/7/11.
  */
 
-public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOffsetChangedListener {
+public abstract class ChatFragment<InitModel>
+        extends PresenterFragment<ChatContract.Presenter>
+        implements AppBarLayout.OnOffsetChangedListener, ChatContract.View<InitModel> {
     protected String mReceiverId;
     protected Adapter mAdapter;
 
@@ -47,6 +51,9 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
 
     @BindView(R.id.appbar)
     AppBarLayout mAppBarLayout;
+
+    @BindView(R.id.collapsingToolbarLayout)
+    CollapsingToolbarLayout mCollapsingLayout;
 
     @BindView(R.id.edit_content)
     EditText mContent;
@@ -70,6 +77,13 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new Adapter();
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        //初始化Presenter
+        mPresenter.start();
     }
 
     //初始化Toolbar
@@ -121,6 +135,9 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
     void onSubmitClick() {
         if (mSubmit.isActivated()) {
             //发送
+            String content = mContent.getText().toString();
+            mContent.setText("");
+            mPresenter.pushText(content);
         } else {
             onMoreClick();
         }
@@ -128,6 +145,16 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
 
     private void onMoreClick() {
         //TODO
+    }
+
+    @Override
+    public RecyclerAdapter<Message> getRecyclerAdapter() {
+        return mAdapter;
+    }
+
+    @Override
+    public void onAdapterDataChanged() {
+        //不需要做任何事情 因为没有占位布局 Recycler是常显示的
     }
 
     //内容的适配器
@@ -223,9 +250,10 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
         @OnClick(R.id.im_portrait)
         void onRePushClick() {
             //重新发送
-            if (mLoading != null) {
+            if (mLoading != null && mPresenter.rePush(mData)) {
                 //必须是右边的才有可能重新发送
-                //TODO 重新发送
+                //状态改变需要重新刷新界面当前的信息
+                updateData(mData);
             }
         }
     }
