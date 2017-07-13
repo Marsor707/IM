@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.StringRes;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.common.app.PresenterFragment;
 import com.example.factory.presenter.account.LoginContact;
@@ -30,6 +31,9 @@ public class LoginFragment extends PresenterFragment<LoginContact.Presenter> imp
 
     @BindView(R.id.loading)
     Loading mLoading;
+
+    @BindView(R.id.txt_go_register)
+    TextView mGoRegister;
 
     @BindView(R.id.btn_submit)
     Button mSubmit;
@@ -78,6 +82,7 @@ public class LoginFragment extends PresenterFragment<LoginContact.Presenter> imp
         //让控件可以输入
         mPhone.setEnabled(true);
         mPassword.setEnabled(true);
+        mGoRegister.setEnabled(true);
         //提交按钮可以继续点击
         mSubmit.setEnabled(true);
     }
@@ -91,6 +96,7 @@ public class LoginFragment extends PresenterFragment<LoginContact.Presenter> imp
         //让控件不可以输入
         mPhone.setEnabled(false);
         mPassword.setEnabled(false);
+        mGoRegister.setEnabled(false);
         //提交按钮不可以继续点击
         mSubmit.setEnabled(false);
     }

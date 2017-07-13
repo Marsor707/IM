@@ -22,7 +22,7 @@ import java.util.List;
 public abstract class BaseDbRepository<Data extends BaseDbModel<Data>> implements DbDataSource<Data>, DbHelper.ChangedListener<Data>, QueryTransaction.QueryResultListCallback<Data> {
     //和Presenter交互的回调
     private SucceedCallback<List<Data>> callback;
-    private final List<Data> dataList = new LinkedList<>();//当前缓存的数据
+    protected final LinkedList<Data> dataList = new LinkedList<>();//当前缓存的数据
     private Class<Data> dataClass;//当前范型对应的真实class的信息
 
     @SuppressWarnings("unchecked")

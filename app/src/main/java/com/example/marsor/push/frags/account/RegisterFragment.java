@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.StringRes;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.common.app.PresenterFragment;
 import com.example.factory.presenter.account.RegisterContact;
@@ -32,6 +33,9 @@ public class RegisterFragment extends PresenterFragment<RegisterContact.Presente
 
     @BindView(R.id.loading)
     Loading mLoading;
+
+    @BindView(R.id.txt_go_login)
+    TextView mGoLogin;
 
     @BindView(R.id.btn_submit)
     Button mSubmit;
@@ -82,6 +86,7 @@ public class RegisterFragment extends PresenterFragment<RegisterContact.Presente
         mPhone.setEnabled(true);
         mName.setEnabled(true);
         mPassword.setEnabled(true);
+        mGoLogin.setEnabled(true);
         //提交按钮可以继续点击
         mSubmit.setEnabled(true);
     }
@@ -96,6 +101,7 @@ public class RegisterFragment extends PresenterFragment<RegisterContact.Presente
         mPhone.setEnabled(false);
         mName.setEnabled(false);
         mPassword.setEnabled(false);
+        mGoLogin.setEnabled(false);
         //提交按钮不可以继续点击
         mSubmit.setEnabled(false);
     }
