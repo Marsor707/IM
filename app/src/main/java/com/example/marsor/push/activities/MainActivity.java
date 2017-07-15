@@ -109,19 +109,19 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
         menu.performIdentifierAction(R.id.action_home, 0);
 
         //初始化头像加载
-        mPortrait.setup(Glide.with(this),Account.getUser());
+        mPortrait.setup(Glide.with(this), Account.getUser());
     }
 
     @OnClick(R.id.im_portrait)
-    void onPortraitClick(){
-        PersonalActivity.show(this,Account.getUserId());
+    void onPortraitClick() {
+        PersonalActivity.show(this, Account.getUserId());
     }
 
     @OnClick(R.id.im_search)
     void onSearchMenuClick() {
         //在群界面时 打开都为人搜索的界面
-        int type=Objects.equals(mNavHelper.getCurrentTab().extra,R.string.title_group)?SearchActivity.TYPE_GROUP:SearchActivity.TYPE_USER;
-        SearchActivity.show(this,type);
+        int type = Objects.equals(mNavHelper.getCurrentTab().extra, R.string.title_group) ? SearchActivity.TYPE_GROUP : SearchActivity.TYPE_USER;
+        SearchActivity.show(this, type);
     }
 
     @OnClick(R.id.btn_action)
@@ -129,7 +129,8 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
         //浮动按钮点击 判断当前界面是群还是人界面
         //如果是群 则打开群创建的界面
         if (Objects.equals(mNavHelper.getCurrentTab().extra, R.string.title_group)) {
-            //TODO 打开群的创建界面
+            //打开群的创建界面
+            GroupCreateActivity.show(this);
         } else {
             // 如果是其他 都打开添加用户界面
             SearchActivity.show(this, SearchActivity.TYPE_USER);
