@@ -6,13 +6,14 @@ import com.example.factory.data.DataSource;
 import com.example.factory.model.api.RspModel;
 import com.example.factory.model.api.group.GroupCreateModel;
 import com.example.factory.model.card.GroupCard;
-import com.example.factory.model.card.UserCard;
 import com.example.factory.model.db.Group;
 import com.example.factory.model.db.Group_Table;
 import com.example.factory.model.db.User;
 import com.example.factory.net.NetWork;
 import com.example.factory.net.RemoteService;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -80,5 +81,29 @@ public class GroupHelper {
                         callback.onDataNotAvailable(R.string.data_network_error);
                     }
                 });
+    }
+
+    public static Call search(String name, final DataSource.Callback<List<GroupCard>> callback) {
+        RemoteService service = NetWork.remote();
+        Call<RspModel<List<GroupCard>>> call = service.groupSearch(name);
+        call.enqueue(new Callback<RspModel<List<GroupCard>>>() {
+            @Override
+            public void onResponse(Call<RspModel<List<GroupCard>>> call, Response<RspModel<List<GroupCard>>> response) {
+                RspModel<List<GroupCard>> rspModel = response.body();
+                if (rspModel.success()) {
+                    //返回数据
+                    callback.onDataLoaded(rspModel.getResult());
+                } else {
+                    Factory.decodeRspCode(rspModel, callback);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RspModel<List<GroupCard>>> call, Throwable t) {
+                callback.onDataNotAvailable(R.string.data_network_error);
+            }
+        });
+        //把当前的调度者返回
+        return call;
     }
 }

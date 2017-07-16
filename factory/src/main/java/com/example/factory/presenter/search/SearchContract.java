@@ -1,5 +1,6 @@
 package com.example.factory.presenter.search;
 
+import com.example.factory.model.card.GroupCard;
 import com.example.factory.model.card.UserCard;
 import com.example.factory.presenter.BaseContract;
 
@@ -22,6 +23,6 @@ public interface SearchContract {
 
     //搜索群的界面
     interface GroupView extends BaseContract.View<Presenter>{
-        void onSearchDone(List<GroupView> groupViews);
+        void onSearchDone(List<GroupCard> groupCards);
     }
 }
