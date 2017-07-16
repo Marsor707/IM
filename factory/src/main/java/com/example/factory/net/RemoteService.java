@@ -4,8 +4,10 @@ import com.example.factory.model.api.RspModel;
 import com.example.factory.model.api.account.AccountRspModel;
 import com.example.factory.model.api.account.LoginModel;
 import com.example.factory.model.api.account.RegisterModel;
+import com.example.factory.model.api.group.GroupCreateModel;
 import com.example.factory.model.api.message.MsgCreateModel;
 import com.example.factory.model.api.user.UserUpdateModel;
+import com.example.factory.model.card.GroupCard;
 import com.example.factory.model.card.MessageCard;
 import com.example.factory.model.card.UserCard;
 
@@ -88,6 +90,7 @@ public interface RemoteService {
 
     /**
      * 查询一个联系人
+     *
      * @param userId 用户id
      * @return RspModel<UserCard>
      */
@@ -96,9 +99,28 @@ public interface RemoteService {
 
     /**
      * 发送消息的接口
+     *
      * @param model MsgCreateModel
      * @return RspModel<MessageCard>
      */
     @POST("msg")
     Call<RspModel<MessageCard>> msgPush(@Body MsgCreateModel model);
+
+    /**
+     * 创建群
+     *
+     * @param model GroupCreateModel
+     * @return RspModel<GroupCard>
+     */
+    @POST("group")
+    Call<RspModel<GroupCard>> groupCreate(@Body GroupCreateModel model);
+
+    /**
+     * 找群
+     *
+     * @param groupId 群id
+     * @return RspModel<GroupCard>
+     */
+    @GET("group/{groupId}")
+    Call<RspModel<GroupCard>> groupFind(@Path("groupId") String groupId);
 }

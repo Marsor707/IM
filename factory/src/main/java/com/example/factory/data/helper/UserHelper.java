@@ -8,8 +8,10 @@ import com.example.factory.model.api.user.UserUpdateModel;
 import com.example.factory.model.card.UserCard;
 import com.example.factory.model.db.User;
 import com.example.factory.model.db.User_Table;
+import com.example.factory.model.db.view.UserSampleModel;
 import com.example.factory.net.NetWork;
 import com.example.factory.net.RemoteService;
+import com.example.factory.persistence.Account;
 import com.example.utils.CollectionUtil;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -184,5 +186,30 @@ public class UserHelper {
             return findFromLocal(id);
         }
         return user;
+    }
+
+    /**
+     * 获取联系人
+     */
+    public static List<User> getContact() {
+        return SQLite.select()
+                .from(User.class)
+                .where(User_Table.isFollow.eq(true))
+                .and(User_Table.id.notEq(Account.getUserId()))
+                .orderBy(User_Table.name, true)
+                .limit(100)
+                .queryList();
+    }
+
+    /**
+     * 获取一个联系人的简单列表 但是是一个简单的数据的
+     */
+    public static List<UserSampleModel> getSampleContact() {
+        return SQLite.select(User_Table.id.withTable().as("id"), User_Table.name.withTable().as("name"), User_Table.portrait.withTable().as("portrait"))
+                .from(User.class)
+                .where(User_Table.isFollow.eq(true))
+                .and(User_Table.id.notEq(Account.getUserId()))
+                .orderBy(User_Table.name, true)
+                .queryCustomList(UserSampleModel.class);
     }
 }
