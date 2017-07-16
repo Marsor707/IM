@@ -58,7 +58,7 @@ public class GroupDispatcher implements GroupCenter {
             List<GroupMember> members = new ArrayList<>();
             for (GroupMemberCard model : cards) {
                 //成员对应的人的信息
-                User user = UserHelper.search(model.getId());
+                User user = UserHelper.search(model.getUserId());
                 //成员对于的群的信息
                 Group group = GroupHelper.find(model.getGroupId());
                 if (user != null && group != null) {

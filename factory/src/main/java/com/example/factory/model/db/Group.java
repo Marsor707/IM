@@ -1,5 +1,7 @@
 package com.example.factory.model.db;
 
+import com.example.factory.data.helper.GroupHelper;
+import com.example.factory.model.db.view.MemberUserModel;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -7,6 +9,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -140,5 +143,23 @@ public class Group extends BaseDbModel<Group> implements Serializable{
                 && Objects.equals(this.desc, oldT.desc)
                 && Objects.equals(this.picture, oldT.picture)
                 && Objects.equals(this.holder, oldT.holder);
+    }
+
+    private long groupMemberCount=-1;
+    public long getGroupMemberCount() {
+        if(groupMemberCount==-1){
+            groupMemberCount= GroupHelper.getMemberCount(id);
+        }
+        return groupMemberCount;
+    }
+
+    private List<MemberUserModel> groupLatelyMembers;
+    //获取当前群成员的信息 只加载4条
+    public List<MemberUserModel> getLatelyMembers() {
+        if(groupLatelyMembers==null||groupLatelyMembers.isEmpty()){
+            //加载简单用户的信息 至多4条
+            groupLatelyMembers=GroupHelper.getMemberUsers(id,4);
+        }
+        return groupLatelyMembers;
     }
 }
