@@ -6,16 +6,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.common.app.Application;
-import com.example.common.widget.GalleryView;
 import com.example.marsor.push.R;
 import com.example.marsor.push.frags.media.GalleryFragment;
 

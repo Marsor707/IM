@@ -101,7 +101,8 @@ public class LaunchActivity extends Activity implements PermissionsFragment.Call
      */
     private void reallySkip() {
         //权限检测 跳转
-        PermissionsFragment.haveAll(this, getSupportFragmentManager());
+        if(PermissionsFragment.haveAll(this, getSupportFragmentManager()))
+            login();
     }
 
     /**
