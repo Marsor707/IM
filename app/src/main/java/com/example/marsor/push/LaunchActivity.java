@@ -19,7 +19,7 @@ import com.example.marsor.push.frags.assist.PermissionsFragment;
 import net.qiujuer.genius.res.Resource;
 import net.qiujuer.genius.ui.compat.UiCompat;
 
-public class LaunchActivity extends Activity {
+public class LaunchActivity extends Activity implements PermissionsFragment.Callback{
     //Drawable
     private ColorDrawable mBgDrawable;
 
@@ -101,15 +101,7 @@ public class LaunchActivity extends Activity {
      */
     private void reallySkip() {
         //权限检测 跳转
-        if (PermissionsFragment.haveAll(this, getSupportFragmentManager())) {
-            //检查跳转到主页还是登录
-            if (Account.isLogin()) {
-                MainActivity.show(this);
-            } else {
-                AccountActivity.show(this);
-            }
-            finish();
-        }
+        PermissionsFragment.haveAll(this, getSupportFragmentManager());
     }
 
     /**
@@ -149,4 +141,15 @@ public class LaunchActivity extends Activity {
             return object.mBgDrawable.getColor();
         }
     };
+
+    @Override
+    public void login() {
+        //检查跳转到主页还是登录
+        if (Account.isLogin()) {
+            MainActivity.show(this);
+        } else {
+            AccountActivity.show(this);
+        }
+        finish();
+    }
 }

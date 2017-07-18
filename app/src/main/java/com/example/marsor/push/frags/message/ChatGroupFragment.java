@@ -21,6 +21,7 @@ import com.example.factory.model.db.view.MemberUserModel;
 import com.example.factory.presenter.message.ChatContract;
 import com.example.factory.presenter.message.ChatGroupPresenter;
 import com.example.marsor.push.R;
+import com.example.marsor.push.activities.GroupMemberActivity;
 import com.example.marsor.push.activities.PersonalActivity;
 
 import java.util.List;
@@ -97,7 +98,7 @@ public class ChatGroupFragment extends ChatFragment<Group> implements ChatContra
                 view.setScaleX(progress);
                 view.setScaleY(progress);
                 view.setAlpha(progress);
-             }
+            }
         }
     }
 
@@ -124,7 +125,7 @@ public class ChatGroupFragment extends ChatFragment<Group> implements ChatContra
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     if (item.getItemId() == R.id.action_add) {
-                        //TODO 进行群成添加
+                        GroupMemberActivity.showAdmin(getContext(), mReceiverId);
                         return true;
                     }
                     return false;
@@ -162,7 +163,7 @@ public class ChatGroupFragment extends ChatFragment<Group> implements ChatContra
             mMemberMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO 显示成员列表
+                    GroupMemberActivity.show(getContext(), mReceiverId);
                 }
             });
         } else {

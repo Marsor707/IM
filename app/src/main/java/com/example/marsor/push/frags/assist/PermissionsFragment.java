@@ -177,6 +177,8 @@ public class PermissionsFragment extends BottomSheetDialogFragment implements Ea
             Application.showToast(R.string.label_permission_ok);
             //Fragment中调用getView得到根布局，前提在onCreateView方法之后
             refreshState(getView());
+            dismiss();
+            mCallback.login();
         }else {
             EasyPermissions.requestPermissions(this,getString(R.string.title_assist_permissions),RC,perms);
         }
@@ -203,5 +205,17 @@ public class PermissionsFragment extends BottomSheetDialogFragment implements Ea
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         //传递对应的参数，并告知接收权限的处理者是我自己
         EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
+    }
+
+    private Callback mCallback;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallback= (Callback) context;
+    }
+
+    public interface Callback{
+        void login();
     }
 }
