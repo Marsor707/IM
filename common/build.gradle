@@ -36,9 +36,12 @@ dependencies {
     compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
     compile "net.qiujuer.genius:kit-handler:$rootProject.ext.geniusVersion"
+    compile "net.qiujuer.widget:airpanel:$rootProject.ext.airpanelVersion"
+    compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
 
     testCompile 'junit:junit:4.12'
 
 
     compile project(':lang')
+    compile project(':face-res')
 }

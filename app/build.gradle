@@ -47,6 +47,8 @@ dependencies {
     // 个推
     compile "com.getui:sdk:$rootProject.ext.getuiVersion"
 
+    compile "net.qiujuer.widget:airpanel:$rootProject.ext.airpanelVersion"
+
 
     compile project(':factory')
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
