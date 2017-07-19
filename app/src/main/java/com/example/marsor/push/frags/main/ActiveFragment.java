@@ -3,6 +3,8 @@ package com.example.marsor.push.frags.main;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.example.common.widget.EmptyView;
 import com.example.common.widget.GalleryView;
 import com.example.common.widget.PortraitView;
 import com.example.common.widget.recycler.RecyclerAdapter;
+import com.example.face.Face;
 import com.example.factory.model.db.Session;
 import com.example.factory.model.db.User;
 import com.example.factory.presenter.message.SessionContract;
@@ -24,6 +27,8 @@ import com.example.marsor.push.R;
 import com.example.marsor.push.activities.MessageActivity;
 import com.example.marsor.push.activities.PersonalActivity;
 import com.example.utils.DateTimeUtil;
+
+import net.qiujuer.genius.ui.Ui;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -120,7 +125,14 @@ public class ActiveFragment extends PresenterFragment<SessionContract.Presenter>
         protected void onBind(Session session) {
             mPortraitView.setup(Glide.with(ActiveFragment.this), session.getPicture());
             mName.setText(session.getTitle());
-            mContent.setText(TextUtils.isEmpty(session.getContent()) ? "" : session.getContent());
+
+            String str = TextUtils.isEmpty(session.getContent()) ? "" : session.getContent();
+            Spannable spannable = new SpannableString(str);
+            //解析表情
+            Face.decode(mContent, spannable, (int) mContent.getTextSize());
+            //把文字设置到布局上
+            mContent.setText(spannable);
+
             mTime.setText(DateTimeUtil.getSimpleDate(session.getModifyAt()));
         }
     }
