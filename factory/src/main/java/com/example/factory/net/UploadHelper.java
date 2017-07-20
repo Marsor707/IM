@@ -22,7 +22,7 @@ import java.util.Date;
 
 public class UploadHelper {
     private static final String TAG=UploadHelper.class.getSimpleName();
-    private static final String ENDPOINT="http://oss-cn-hongkong.aliyuncs.com";
+    public static final String ENDPOINT="http://oss-cn-hongkong.aliyuncs.com";
     //上传的仓库名
     private static final String BUCKET_NAME="";
     private static OSS getClient(){

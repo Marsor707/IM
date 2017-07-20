@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -37,6 +38,7 @@ import net.qiujuer.genius.ui.widget.Loading;
 import net.qiujuer.widget.airpanel.AirPanel;
 import net.qiujuer.widget.airpanel.Util;
 
+import java.io.File;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -203,7 +205,19 @@ public abstract class ChatFragment<InitModel>
 
     @Override
     public EditText getInputEditText() {
+        //返回输入框
         return mContent;
+    }
+
+    @Override
+    public void onSendGallery(String[] paths) {
+        //图片
+        mPresenter.pushImages(paths);
+    }
+
+    @Override
+    public void onRecordDone(File file, long time) {
+        //TODO 语音
     }
 
     //内容的适配器
@@ -343,6 +357,8 @@ public abstract class ChatFragment<InitModel>
 
     //图片的Holder
     class PicHolder extends BaseHolder {
+        @BindView(R.id.im_image)
+        ImageView mContent;
 
         public PicHolder(View itemView) {
             super(itemView);
@@ -351,7 +367,12 @@ public abstract class ChatFragment<InitModel>
         @Override
         protected void onBind(Message message) {
             super.onBind(message);
-            //TODO
+            //当时图片类型的时候 content中就是具体的地址
+            String content = message.getContent();
+            Glide.with(ChatFragment.this)
+                    .load(content)
+                    .fitCenter()
+                    .into(mContent);
         }
     }
 

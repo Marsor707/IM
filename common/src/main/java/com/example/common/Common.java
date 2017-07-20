@@ -9,10 +9,12 @@ public class Common {
      * 一些不可变的永恒的参数
      * 通常用于一些配置
      */
-    public interface Constance{
+    public interface Constance {
         //手机号的正则 11位
-        String REGEX_MOBILE="[1][3,4,5,7,8][0-9]{9}$";
+        String REGEX_MOBILE = "[1][3,4,5,7,8][0-9]{9}$";
         //基础的网络请求地址
-        String API_URL="http://10.7.90.166:8080/api/";
+        String API_URL = "";
+        //最大上传图片大小
+        long MAX_UPLOAD_IMAGE_LENGTH = 860 * 1024;
     }
 }

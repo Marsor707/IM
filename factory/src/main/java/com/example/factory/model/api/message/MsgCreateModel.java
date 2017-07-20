@@ -83,6 +83,15 @@ public class MsgCreateModel {
         return this.card;
     }
 
+    //同步到卡片的最新信息
+    public void refreshByCard() {
+        if (card == null)
+            return;
+        //刷新内容和附件信息
+        this.content = card.getContent();
+        this.attach = card.getAttach();
+    }
+
     /**
      * 建造者模式 快速的建立一个发送model
      */
