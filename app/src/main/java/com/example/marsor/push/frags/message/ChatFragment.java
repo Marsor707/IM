@@ -116,6 +116,26 @@ public abstract class ChatFragment<InitModel>
             }
         });
 
+        mPanelBoss.setOnStateChangedListener(new AirPanel.OnStateChangedListener() {
+            @Override
+            public void onPanelStateChanged(boolean isOpen) {
+                //面板状态改变
+                if(isOpen) {
+                    onBottomPanelOpened();
+                    onAdapterDataChanged();
+                }
+            }
+
+            @Override
+            public void onSoftKeyboardStateChanged(boolean isOpen) {
+                //软键盘状态改变
+                if(isOpen) {
+                    onBottomPanelOpened();
+                    onAdapterDataChanged();
+                }
+            }
+        });
+
         mPanelFragment = (PanelFragment) getChildFragmentManager().findFragmentById(R.id.frag_panel);
         mPanelFragment.setup(this);
 
@@ -186,6 +206,21 @@ public abstract class ChatFragment<InitModel>
     public void onDestroy() {
         super.onDestroy();
         mAudioPlayer.destroy();
+    }
+
+    private void onBottomPanelOpened() {
+        if (mAppBarLayout != null)
+            mAppBarLayout.setExpanded(false, true);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (mPanelBoss.isOpen()) {
+            //关闭面板并且返回true表示自己已经处理了返回消费
+            mPanelBoss.closePanel();
+            return true;
+        }
+        return super.onBackPressed();
     }
 
     @Override
@@ -268,6 +303,7 @@ public abstract class ChatFragment<InitModel>
     @Override
     public void onAdapterDataChanged() {
         //不需要做任何事情 因为没有占位布局 Recycler是常显示的
+        mRecyclerView.smoothScrollToPosition(mAdapter.getItems().size());
     }
 
     @Override

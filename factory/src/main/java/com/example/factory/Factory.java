@@ -17,8 +17,6 @@ import com.example.factory.model.card.GroupCard;
 import com.example.factory.model.card.GroupMemberCard;
 import com.example.factory.model.card.MessageCard;
 import com.example.factory.model.card.UserCard;
-import com.example.factory.model.db.Group;
-import com.example.factory.model.db.Message;
 import com.example.factory.persistence.Account;
 import com.example.factory.utils.DBFlowExclusionStrategy;
 import com.google.gson.Gson;
@@ -175,7 +173,7 @@ public class Factory {
      * 收到账户退出的消息需要进行账户退出重新登录
      */
     private void logout() {
-
+        //app().finishAll();
     }
 
     /**
