@@ -156,8 +156,13 @@ public class MessageHelper {
 
     //上传语言
     private static String uploadAudio(String content) {
-        //TODO 上传语言
-        return null;
+        //上传语言
+        File file=new File(content);
+        if(!file.exists()||file.length()<=0)
+            return null;
+
+        //上传并返回
+        return UploadHelper.uploadAudio(content);
     }
 
     /**

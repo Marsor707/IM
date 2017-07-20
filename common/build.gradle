@@ -38,6 +38,7 @@ dependencies {
     compile "net.qiujuer.genius:kit-handler:$rootProject.ext.geniusVersion"
     compile "net.qiujuer.widget:airpanel:$rootProject.ext.airpanelVersion"
     compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
+    compile "net.qiujuer.lame:lame:$rootProject.ext.lameVersion"
 
     testCompile 'junit:junit:4.12'
 

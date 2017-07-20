@@ -19,7 +19,7 @@ public interface ChatContract {
         void pushText(String content);
 
         //发送语言
-        void pushAudio(String path);
+        void pushAudio(String path, long time);
 
         //发送图片
         void pushImages(String[] paths);

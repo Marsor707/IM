@@ -1,6 +1,7 @@
 package com.example.factory.presenter.message;
 
 import android.support.v7.util.DiffUtil;
+import android.text.TextUtils;
 
 import com.example.factory.data.helper.MessageHelper;
 import com.example.factory.data.message.MessageDataSource;
@@ -42,8 +43,19 @@ public class ChatPresenter<View extends ChatContract.View> extends BaseSourcePre
     }
 
     @Override
-    public void pushAudio(String path) {
-        //TODO 发送语言
+    public void pushAudio(String path,long time) {
+        //发送语言
+        if(TextUtils.isEmpty(path))
+            return;
+
+        //构建一个新的消息
+        MsgCreateModel model = new MsgCreateModel.Builder()
+                .receiver(mReceiverId, mReceiverType)
+                .content(path, Message.TYPE_AUDIO)
+                .attach(String.valueOf(time))
+                .build();
+        //进行网络发送
+        MessageHelper.push(model);
     }
 
     @Override
