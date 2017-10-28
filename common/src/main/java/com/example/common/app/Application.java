@@ -138,7 +138,7 @@ public class Application extends android.app.Application {
         }
 
         // aar
-        File path = new File(getCacheDirFile(), isTmp ? "tmp.mp3" : SystemClock.uptimeMillis() + ".mp3");
+        File path = new File(dir, isTmp ? "tmp.mp3" : SystemClock.uptimeMillis() + ".mp3");
         return path.getAbsoluteFile();
     }
 
